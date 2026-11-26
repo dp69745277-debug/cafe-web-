@@ -19,7 +19,7 @@ export interface GalleryPhoto {
 export const CAFE_DATA = {
   brandName: 'Raj Cafe Dhawa',
   shortBrand: 'Raj Cafe',
-  hindiName: 'राज कैफे धावा',
+  hindiName: 'राज कैफे धवा',
   shortMark: 'RCD',
   tagline: 'Good Coffee, Great Food & Cozy Evenings.',
   heroEyebrow: 'DHAWA, JODHPUR • EST. HANGOUT SPOT',
