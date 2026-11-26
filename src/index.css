@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-espresso: #110E0C;
+  --color-charcoal: #1B1613;
+  --color-cream: #F8F3EB;
+  --color-sand: #EFE7DA;
+  --color-gold: #C99A3B;
+  --color-amber: #D97736;
+  --color-ivory: #F7F2EA;
+  --color-espresso-ink: #1C1612;
+
+  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-sans);
+    background-color: #110E0C;
+    color: #F7F2EA;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-editorial {
+    font-family: var(--font-serif);
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes rcd-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-rcd-marquee {
+  display: flex;
+  width: max-content;
+  animation: rcd-marquee 38s linear infinite;
+}
+
+.animate-rcd-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-rcd-marquee {
+    animation: none;
+  }
+}
+
+/* Custom subtle scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #110E0C;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2f2620;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C99A3B;
+}
