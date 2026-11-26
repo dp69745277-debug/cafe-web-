@@ -50,12 +50,20 @@ export const ReviewQrSection: React.FC = () => {
   const qrCanvasContainerRef = useRef<HTMLDivElement>(null);
   const [downloaded, setDownloaded] = useState(false);
 
-  const handleDownloadPrintableCard = () => {
+  const handleDownloadPrintableCard = async () => {
     const sourceCanvas = qrCanvasContainerRef.current?.querySelector('canvas');
     if (!sourceCanvas) return;
 
+    // Load the café's real logo if available
+    const logoImg = await new Promise<HTMLImageElement | null>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = '/logo.png';
+    });
+
     const W = 1200;
-    const H = 1640;
+    const H = 1740;
     const out = document.createElement('canvas');
     out.width = W;
     out.height = H;
@@ -67,7 +75,7 @@ export const ReviewQrSection: React.FC = () => {
     ctx.fillRect(0, 0, W, H);
 
     // Subtle warm radial glow behind QR frame
-    const radial = ctx.createRadialGradient(W / 2, 860, 40, W / 2, 860, 560);
+    const radial = ctx.createRadialGradient(W / 2, 930, 40, W / 2, 930, 560);
     radial.addColorStop(0, 'rgba(201, 154, 59, 0.16)');
     radial.addColorStop(1, 'rgba(17, 14, 12, 0)');
     ctx.fillStyle = radial;
@@ -84,32 +92,49 @@ export const ReviewQrSection: React.FC = () => {
     drawRoundedRect(ctx, 72, 72, W - 144, H - 144, 30);
     ctx.stroke();
 
-    // 3. Crest + Brand Heading
+    // 3. Real Café Logo at Top Center
+    const logoSize = 112;
+    const logoX = (W - logoSize) / 2;
+    const logoY = 108;
+    if (logoImg) {
+      ctx.save();
+      drawRoundedRect(ctx, logoX, logoY, logoSize, logoSize, 24);
+      ctx.clip();
+      ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+      ctx.restore();
+
+      ctx.strokeStyle = 'rgba(201, 154, 59, 0.65)';
+      ctx.lineWidth = 3;
+      drawRoundedRect(ctx, logoX, logoY, logoSize, logoSize, 24);
+      ctx.stroke();
+    }
+
+    // 4. Brand Heading
     ctx.textAlign = 'center';
     ctx.fillStyle = '#C99A3B';
     ctx.font = '600 26px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('RAJ CAFE DHAWA  •  RCD', W / 2, 162);
+    ctx.fillText('RAJ CAFE DHAWA  •  RCD', W / 2, 268);
 
     ctx.fillStyle = '#F7F2EA';
     ctx.font = '600 72px "Cormorant Garamond", Georgia, serif';
-    ctx.fillText('Loved Your Visit?', W / 2, 258);
+    ctx.fillText('Loved Your Visit?', W / 2, 356);
 
     ctx.fillStyle = 'rgba(247, 242, 234, 0.78)';
     ctx.font = '400 32px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('Drop us a 5-star Google Review in 10 seconds', W / 2, 322);
+    ctx.fillText('Drop us a 5-star Google Review in 10 seconds', W / 2, 416);
 
-    // 4. Five Gold Stars
+    // 5. Five Gold Stars
     const starSpacing = 62;
     const startX = W / 2 - starSpacing * 2;
     for (let i = 0; i < 5; i++) {
-      drawStar(ctx, startX + i * starSpacing, 405, 22, 10, '#C99A3B');
+      drawStar(ctx, startX + i * starSpacing, 490, 22, 10, '#C99A3B');
     }
 
-    // 5. High-Contrast White Card for Scannable QR Code
+    // 6. High-Contrast White Card for Scannable QR Code
     const cardW = 720;
     const cardH = 820;
     const cardX = (W - cardW) / 2;
-    const cardY = 475;
+    const cardY = 555;
 
     ctx.fillStyle = '#FFFFFF';
     drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 36);
@@ -135,18 +160,18 @@ export const ReviewQrSection: React.FC = () => {
     ctx.font = '600 22px "Plus Jakarta Sans", sans-serif';
     ctx.fillText('Point your phone camera here', W / 2, cardY + cardH - 42);
 
-    // 6. Footer Details
+    // 7. Footer Details
     ctx.fillStyle = '#C99A3B';
     ctx.font = '600 26px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('4.4 ★ ON GOOGLE  •  OPEN DAILY 10:30 AM – 10:00 PM', W / 2, 1410);
+    ctx.fillText('4.4 ★ ON GOOGLE  •  OPEN DAILY 10:30 AM – 10:00 PM', W / 2, 1480);
 
     ctx.fillStyle = 'rgba(247, 242, 234, 0.72)';
     ctx.font = '400 24px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('2nd Floor (Above Dada Mirchi Masala), Sinli Road, Dhawa, Jodhpur', W / 2, 1470);
+    ctx.fillText('2nd Floor (Above Dada Mirchi Masala), Sinli Road, Dhawa, Jodhpur', W / 2, 1540);
 
     ctx.fillStyle = 'rgba(201, 154, 59, 0.85)';
     ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('Instagram: @raj_cafe_dhawa  •  +91 63764 94346', W / 2, 1525);
+    ctx.fillText('Instagram: @raj_cafe_dhawa  •  +91 63764 94346', W / 2, 1595);
 
     const dataUrl = out.toDataURL('image/png');
     const link = document.createElement('a');
