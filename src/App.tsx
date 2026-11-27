@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { MotionConfig } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { VibeSection } from './components/VibeSection';
@@ -64,6 +65,7 @@ export function App() {
           onRemove={handleRemove}
           onClear={handleClear}
         />
+        <Analytics />
       </div>
     </MotionConfig>
   );
